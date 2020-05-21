@@ -1,0 +1,33 @@
+name: CI-CD-To-AWS
+env: 
+EB_PACKAGE_S3_BUCKET_NAME : "demopackage"
+EB_APPLICATION_NAME : "API"
+EB_ENVIRONMENT_NAME : "API-dev"
+DEPLOY_PACKAGE_NAME : "api_app_${{github.sha}}.zip"
+AWS_REGION_NAME : "eu-central-1"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:  
+    
+  build:
+    ci-part:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name : Create ZIP Deployment package
+      run : zip -r ${{env.DEPLOY_PACKAGE_NAME}} ./ -x *.git*

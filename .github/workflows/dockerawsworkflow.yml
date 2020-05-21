@@ -78,5 +78,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: sample-app-service
-        cluster: DemoAWSCluster
+        cluster: DemoAWSCluster2
         wait-for-service-stability: true

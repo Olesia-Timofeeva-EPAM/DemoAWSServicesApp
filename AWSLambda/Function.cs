@@ -17,7 +17,7 @@ namespace AWSLambda
 {
     public class Function
     {
-		private const string BucketName = "booksdemobucket";
+		private const string BucketName = "demobooksbucket";
 		
 
 		/// <summary>
@@ -50,8 +50,7 @@ namespace AWSLambda
         private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)
         {
             context.Logger.LogLine($"Processed message {message.Body}");
-			BasicAWSCredentials awsCredential = new Amazon.Runtime.BasicAWSCredentials("AKIAQC7HH3PYOCW2EP6Q", "6PgyXbCdOJsx+rLGtrX1xd0LouIUWSVBZSKN6KcV");
-			IAmazonS3 client = new AmazonS3Client(awsCredential, Amazon.RegionEndpoint.EUCentral1);
+			IAmazonS3 client = new AmazonS3Client(Amazon.RegionEndpoint.EUCentral1);
 			
 			byte[] bytes = new byte[message.Body.Length * sizeof(char)];
 			Buffer.BlockCopy(message.Body.ToCharArray(), 0, bytes, 0, bytes.Length);

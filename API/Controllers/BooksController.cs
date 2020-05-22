@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DAL;
-using DAL.Contracts;
+﻿using DAL.Contracts;
 using Infrastructure.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -33,6 +30,11 @@ namespace API.Controllers
 			return await _dataAccessProvider.GetBooks();
 		}
 		[HttpPost]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task Create([FromBody] Book book)
 		{
 				await _dataAccessProvider.AddBook(book);
@@ -41,12 +43,22 @@ namespace API.Controllers
 
 		[HttpGet]
 		[Route("Details/{isbn}")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task<Book> Details(string isbn)
 		{
 			return await _dataAccessProvider.GetBook(isbn);
 		}
 
 		[HttpPut]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task Edit([FromBody] Book book)
 		{
 			await _dataAccessProvider.UpdateBook(book);
@@ -54,6 +66,11 @@ namespace API.Controllers
 		}
 
 		[HttpDelete]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public async Task DeleteConfirmed(string isbn)
 		{
 			await _dataAccessProvider.DeleteBook(isbn);

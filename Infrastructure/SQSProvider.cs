@@ -1,5 +1,4 @@
-﻿using Amazon;
-using Amazon.SQS;
+﻿using Amazon.SQS;
 using Amazon.SQS.Model;
 using Infrastructure.Contracts;
 using System.Threading.Tasks;
@@ -21,65 +20,40 @@ namespace Infrastructure
 			get; set;
 		}
 
-
 		public async Task Send(string message)
 		{
 			if (!await DoesQueueExist())
 				CreateQueue();
-			
-			try
-			{
+
 				var request = new SendMessageRequest
 				{
 					QueueUrl = QueueUrl,
 					MessageBody = message
 				};
-				await _sqsClient.SendMessageAsync(request);
-			}
-			catch (AmazonSQSException ex)
-			{
-				throw;
-			}
-			
-
+			await _sqsClient.SendMessageAsync(request);
 		}
 
 		private async void CreateQueue()
 		{
-			try
+			var request = new CreateQueueRequest
 			{
-				var request = new CreateQueueRequest
-				{
-					QueueName = QueueName
-				};
-				var response = await _sqsClient.CreateQueueAsync(request);
-				QueueUrl = response.QueueUrl;
-			}
-			catch (AmazonSQSException ex)
-			{
-				throw;
-			}
-			
+				QueueName = QueueName
+			};
+			var response = await _sqsClient.CreateQueueAsync(request);
+			QueueUrl = response.QueueUrl;
 		}
 
 		private async Task<bool> DoesQueueExist()
 		{
-			try
+			var request = new ListQueuesRequest();
+			var response = await _sqsClient.ListQueuesAsync(request);
+			foreach (var queueUrl in response.QueueUrls)
 			{
-				var request = new ListQueuesRequest();
-				var response = await _sqsClient.ListQueuesAsync(request);
-				foreach (var queueUrl in response.QueueUrls)
+				if (queueUrl.Contains(QueueName))
 				{
-					if (queueUrl.Contains(QueueName))
-					{
-						QueueUrl = queueUrl;
-						return true;
-					}
+					QueueUrl = queueUrl;
+					return true;
 				}
-			}
-			catch (AmazonSQSException ex)
-			{
-				throw;
 			}
 
 			return false;

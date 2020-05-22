@@ -50,20 +50,20 @@ namespace AWSLambda
         private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)
         {
             context.Logger.LogLine($"Processed message {message.Body}");
-			IAmazonS3 client = new AmazonS3Client(Amazon.RegionEndpoint.EUCentral1);
+	    IAmazonS3 client = new AmazonS3Client(Amazon.RegionEndpoint.EUCentral1);
 			
-			byte[] bytes = new byte[message.Body.Length * sizeof(char)];
-			Buffer.BlockCopy(message.Body.ToCharArray(), 0, bytes, 0, bytes.Length);
+	    byte[] bytes = new byte[message.Body.Length * sizeof(char)];
+	    Buffer.BlockCopy(message.Body.ToCharArray(), 0, bytes, 0, bytes.Length);
 
-			PutObjectRequest request = new PutObjectRequest()
-			{
-				BucketName = BucketName,
-				Key = DateTime.Now.ToString(),
-				ContentBody = message.Body
-			};
+	    PutObjectRequest request = new PutObjectRequest()
+	    {
+		BucketName = BucketName,
+		Key = DateTime.Now.ToString(),
+		ContentBody = message.Body
+	    };
 
-			await client.PutObjectAsync(request);
-			await Task.CompletedTask;
+	    await client.PutObjectAsync(request);
+	    await Task.CompletedTask;
         }
     }
 }
